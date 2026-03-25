@@ -55,7 +55,7 @@ builder.Services.AddSwaggerGen(c =>
         {
             new Microsoft.OpenApi.Models.OpenApiSecurityScheme
             {
-                Reference = new Microsoft.OpenApi.Models.OpenApiSecurityReference
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
                 {
                     Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
                     Id = "Bearer"
@@ -65,6 +65,7 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
 
 
 // Database
