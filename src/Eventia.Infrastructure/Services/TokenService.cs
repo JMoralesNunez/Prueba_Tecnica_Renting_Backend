@@ -27,7 +27,13 @@ public class TokenService : ITokenService
             new(ClaimTypes.Role, user.Role.ToString())
         };
 
-        var secret = _configuration["Jwt:Secret"] ?? "SuperSecretKeyForEventiaTechTest2024!";
+        var secret = Environment.GetEnvironmentVariable("JWT_SECRET") 
+                     ?? _configuration["Jwt:Secret"] 
+                     ?? "SuperSecretKeyForEventiaTechTest2024!";
+        
+        var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? _configuration["Jwt:Issuer"];
+        var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? _configuration["Jwt:Audience"];
+
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -36,9 +42,10 @@ public class TokenService : ITokenService
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = creds,
-            Issuer = _configuration["Jwt:Issuer"],
-            Audience = _configuration["Jwt:Audience"]
+            Issuer = issuer,
+            Audience = audience
         };
+
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
