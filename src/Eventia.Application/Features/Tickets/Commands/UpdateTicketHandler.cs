@@ -40,6 +40,9 @@ public class UpdateTicketHandler : IRequestHandler<UpdateTicketCommand, BaseResp
 
         await _ticketRepository.UpdateAsync(ticket);
 
+        // RE-FETCH to include navigation properties (Assignee, CreatedBy) after ID updates
+        var updatedTicket = await _ticketRepository.GetByIdAsync(ticket.Id);
+
         // Add history record
         await _historyRepository.AddAsync(new Eventia.Domain.Entities.TicketHistory
         {
@@ -53,16 +56,17 @@ public class UpdateTicketHandler : IRequestHandler<UpdateTicketCommand, BaseResp
 
 
         var response = new TicketResponse(
-            ticket.Id,
-            ticket.Title,
-            ticket.Description,
-            ticket.Status,
-            ticket.Assignee?.Name,
-            ticket.CreatedBy?.Name ?? "Unknown",
-            ticket.EventName,
-            ticket.CreatedAt,
-            ticket.UpdatedAt
+            updatedTicket!.Id,
+            updatedTicket.Title,
+            updatedTicket.Description,
+            updatedTicket.Status,
+            updatedTicket.Assignee?.Name,
+            updatedTicket.CreatedBy?.Name ?? "Unknown",
+            updatedTicket.EventName,
+            updatedTicket.CreatedAt,
+            updatedTicket.UpdatedAt
         );
+
 
         return BaseResponse<TicketResponse>.SuccessResult(response, "Ticket updated successfully");
     }

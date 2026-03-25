@@ -49,6 +49,9 @@ public class CreateTicketHandler : IRequestHandler<CreateTicketCommand, BaseResp
 
         await _ticketRepository.AddAsync(ticket);
 
+        // RE-FETCH to include navigation properties (Assignee, CreatedBy)
+        var createdTicket = await _ticketRepository.GetByIdAsync(ticket.Id);
+
         // Add history record
         await _historyRepository.AddAsync(new TicketHistory
         {
@@ -61,18 +64,19 @@ public class CreateTicketHandler : IRequestHandler<CreateTicketCommand, BaseResp
         });
 
 
-        // Reload to get navigation properties if needed, or just return basic
+        // Reload to get navigation properties
         var response = new TicketResponse(
-            ticket.Id,
-            ticket.Title,
-            ticket.Description,
-            ticket.Status,
-            null, // Assignee name will be null initially unless we fetch it
-            "You", // Since we just created it
-            ticket.EventName,
-            ticket.CreatedAt,
-            ticket.UpdatedAt
+            createdTicket!.Id,
+            createdTicket.Title,
+            createdTicket.Description,
+            createdTicket.Status,
+            createdTicket.Assignee?.Name,
+            createdTicket.CreatedBy?.Name ?? "Unknown",
+            createdTicket.EventName,
+            createdTicket.CreatedAt,
+            createdTicket.UpdatedAt
         );
+
 
         return BaseResponse<TicketResponse>.SuccessResult(response, "Ticket created successfully");
     }
