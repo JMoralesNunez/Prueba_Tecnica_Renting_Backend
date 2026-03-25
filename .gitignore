@@ -1,0 +1,31 @@
+## .NET Ignore
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## OS Ignore
+.DS_Store
+Thumbs.db
+
+## User/Sensitive Secrets
+.env
+appsettings.Development.json
+
+## EF Core
+/Migrations/
+# (Opcional) Si quieres guardar las migraciones en git, comenta la línea de arriba. 
+# Para pruebas técnicas, se recomienda subirlas. 
+# Las comentaré por ahora para que se suban.
+# Migrations/ 
+
+## Publishing
+publish/
+*.swp
+*.bak
