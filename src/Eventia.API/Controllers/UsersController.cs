@@ -18,7 +18,16 @@ public class UsersController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet]
+    [Authorize(Roles = "Administrator")] // Role 3
+    public async Task<IActionResult> GetAll()
+    {
+        var result = await _mediator.Send(new GetAllUsersQuery());
+        return Ok(result);
+    }
+
     [HttpGet("{id}")]
+
     public async Task<IActionResult> GetById(Guid id)
     {
         var result = await _mediator.Send(new GetUserByIdQuery(id));

@@ -68,8 +68,10 @@ Gestión administrativa de usuarios.
 
 | Método | Endpoint | Descripción | Seguridad |
 | :--- | :--- | :--- | :--- |
+| **GET** | `/api/users` | Lista todos los usuarios (name, email, role, isActive, createdAt). | Solo Administradores (Rol 3). |
 | **GET** | `/api/users/{id}` | Obtiene la información de un usuario registrado. | Cualquiera autenticado. |
-| **PATCH** | `/api/users/{id}/disable` | Desactiva la cuenta de un usuario. | Solo disponible para Administradores. |
+| **PATCH** | `/api/users/{id}/disable` | Desactiva la cuenta de un usuario. | Solo Administradores. |
+
 
 ---
 
