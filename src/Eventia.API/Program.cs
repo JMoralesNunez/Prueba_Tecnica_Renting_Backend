@@ -36,6 +36,14 @@ builder.Host.UseSerilog();
 // Add services to the container.
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularDev",
+        policy => policy.WithOrigins("http://localhost:4200")
+                         .AllowAnyMethod()
+                         .AllowAnyHeader());
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -109,6 +117,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseMiddleware<Eventia.API.Middleware.ExceptionHandlingMiddleware>();
+
+app.UseCors("AllowAngularDev");
 
 if (app.Environment.IsDevelopment())
 {
